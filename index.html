@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,22 +42,26 @@
         });
 
         function correctAddresses(data) {
-            return data.map(row => {
+            return data.map((row, index) => {
+                if (index === 0) {
+                    return ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link'];
+                }
+
                 const fullAddress = row[12];
-                if (!fullAddress || fullAddress.includes('http')) {
+                if (!fullAddress || fullAddress.includes('http') || fullAddress.trim() === '') {
                     return row;
                 }
 
                 const parts = fullAddress.split(',').map(part => part.trim());
-                let [street, addressLine2, city, state, zip] = ['', '', '', '', ''];
+                let [street, suite, city, state, zip] = ['', '', '', '', ''];
 
                 if (parts.length > 0) street = parts[0];
-                if (parts.length > 1) addressLine2 = parts[1];
+                if (parts.length > 1) suite = parts[1].includes('suite') ? parts[1] : '';
                 if (parts.length > 2) city = parts[2];
                 if (parts.length > 3) state = parts[3];
                 if (parts.length > 4) zip = parts[4];
 
-                return [...row.slice(0, 12), street, addressLine2, city, state, zip, ...row.slice(13)];
+                return [row[0], row[1], row[2], row[3], row[4], street, suite, city, state, zip, row[6], row[7], row[8], row[9], row[10], row[11], row[13], row[14]];
             });
         }
 
