@@ -47,21 +47,19 @@
                     return ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link'];
                 }
 
-                const fullAddress = row[12];
-                if (!fullAddress || fullAddress.includes('http') || fullAddress.trim() === '') {
-                    return row;
-                }
+                const businessName = row[7]; // Business Name from column H
+                const about = row[11]; // About from column L
+                const fullAddress = row[12]; // Full address from column M
+                let [street, addressLine2, city, state, zip] = fullAddress.split(',').map(part => part.trim());
 
-                const parts = fullAddress.split(',').map(part => part.trim());
-                let [street, suite, city, state, zip] = ['', '', '', '', ''];
+                // Formatting phone number (remove dashes and spaces)
+                let phone = row[5].replace(/[\s-]/g, '');
 
-                if (parts.length > 0) street = parts[0];
-                if (parts.length > 1) suite = parts[1].includes('suite') ? parts[1] : '';
-                if (parts.length > 2) city = parts[2];
-                if (parts.length > 3) state = parts[3];
-                if (parts.length > 4) zip = parts[4];
+                // Determine the country based on the address
+                let country = 'US'; // Default to 'US' or implement logic to determine based on address
 
-                return [row[0], row[1], row[2], row[3], row[4], street, suite, city, state, zip, row[6], row[7], row[8], row[9], row[10], row[11], row[13], row[14]];
+                // Reconstruct the row with the correct format
+                return [row[0], businessName, 'Shop Local', 'Essential Business', about, street, addressLine2, city, state, zip, phone, country, row[6], row[8], row[9], row[10], row[13], row[14]];
             });
         }
 
