@@ -3,59 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>CSV Address Formatter</title>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Address Formatter</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2, #6e45e2, #88d3ce);
-            color: white;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-        }
-        input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background: linear-gradient(to right, #6e45e2, #88d3ce);
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-        button:hover {
-            background: linear-gradient(to right, #88d3ce, #6e45e2);
-            transform: translateY(-2px);
-        }
-    </style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url('URL_OF_YOUR_MECHANICAL_BACKGROUND_IMAGE') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .container {
+        background: rgba(0, 0, 0, 0.75);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        width: 40%;
+        min-width: 300px;
+    }
+    h1 {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 20px;
+        font-weight: 300;
+    }
+    .styled-button {
+        display: block;
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-top: 20px;
+        background: linear-gradient(45deg, #9c27b0, #ff9800);
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        outline: none;
+        text-align: center;
+    }
+    .styled-button:hover, .styled-button:focus {
+        background: linear-gradient(45deg, #ff9800, #9c27b0);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+    /* Hidden input file styling */
+    .input-file-container {
+        position: relative;
+        width: calc(100% - 20px);
+    }
+    .input-file-trigger {
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        background: linear-gradient(45deg, #9c27b0, #ff9800);
+        color: white;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        width: 100%;
+    }
+    .input-file {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .input-file-trigger:hover, .input-file-trigger:focus {
+        background: linear-gradient(45deg, #ff9800, #9c27b0);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+</style>
 </head>
 <body>
     <div class="container">
-        <h1>CSV Address Formatter</h1>
-        <input type="file" id="csvFile" accept=".csv">
-        <button id="processBtn">Process CSV</button>
+    <h1>CSV Address Formatter</h1>
+    <div class="input-file-container">
+        <label class="input-file-trigger" for="csvFile">Select CSV File</label>
+        <input type="file" id="csvFile" class="input-file" accept=".csv">
     </div>
+    <button id="processBtn" class="styled-button">Process CSV</button>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
@@ -76,44 +117,56 @@
             }
         });
 
-        function correctAddresses(data) {
-    return data.map((row, index) => {
-        if (index === 0) {
-            // Headers for the corrected CSV
-            return ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link'];
+       function correctAddresses(rows) {
+    // The first row is assumed to be blank or not needed since we are constructing a new header row
+    let correctedData = [];
+
+    // Define new headers for the corrected CSV
+    let headers = ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link'];
+    correctedData.push(headers);
+
+    // Start processing from the first row since there are no headers
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Skip the first row if it's blank or not needed
+
+        // Initialize an array to hold corrected row data
+        let correctedRow = new Array(headers.length).fill('');
+
+        // Process the full address from the assumed column index for 'M'
+        let fullAddress = row[12]; // Column M is at index 12
+        let addressComponents = fullAddress ? fullAddress.split(',') : [];
+
+        // Extract street address (Column F), which is typically the first component
+        correctedRow[5] = addressComponents[0] || ''; // Address
+
+        // Check for suite or office number and city (Column G and H)
+        if (addressComponents.length > 1) {
+            let suiteOrOfficeMatch = addressComponents[1].match(/(suite|office) \d+/i);
+            correctedRow[6] = suiteOrOfficeMatch ? suiteOrOfficeMatch[0] : ''; // Address line 2
+            correctedRow[7] = suiteOrOfficeMatch ? addressComponents[2] || '' : addressComponents[1] || ''; // City
         }
 
-        // Extracting and formatting data from the original CSV
-        const directoryLink = row[3]; // Column D
-        const businessName = row[7]; // Column H
-        const about = row[11]; // Column L
-        const fullAddress = row[12]; // Column M
-        let [address, addressLine2, city, state, zip] = ['', '', '', '', ''];
-
-        if (fullAddress) {
-            let parts = fullAddress.split(',');
-            address = parts[0].trim();
-            city = (parts.length > 2) ? parts[1].trim() : '';
-            state = (parts.length > 2) ? parts[parts.length - 2].trim() : '';
-            zip = (parts.length > 2) ? parts[parts.length - 1].trim() : '';
-            addressLine2 = (parts.length > 3) ? parts[1].trim() : '';
+        // State and Zip (Column I and J)
+        if (addressComponents.length > 2) {
+            correctedRow[8] = addressComponents[addressComponents.length - 2] || ''; // State
+            correctedRow[9] = addressComponents[addressComponents.length - 1] || ''; // Zip
         }
 
-        let phone = row[6].replace(/[\s-]/g, ''); // Column G
-        const email = row[9]; // Column J
+        // Populate other data from the assumed columns
+        correctedRow[0] = row[3] || ''; // Directory Link from Column D
+        correctedRow[1] = row[7] || ''; // Business Name from Column H
+        correctedRow[2] = 'Shop Local'; // Category 1
+        correctedRow[3] = 'Essential Business'; // Sub category 1
+        correctedRow[4] = row[11] || ''; // About from Column L
+        correctedRow[10] = (row[6] || '').replace(/\D/g, ''); // Phone from Column G, remove non-digits
+        correctedRow[11] = 'US'; // Country
+        correctedRow[12] = row[9] || ''; // Email from Column J
 
-        // Setting static values for some columns
-        const category1 = 'Shop Local';
-        const subCategory1 = 'Essential Business';
-        const country = 'US';
-        const website = '';
-        const instagram = '';
-        const facebook = '';
-        const twitter = '';
-        const youtube = '';
-
-        return [directoryLink, businessName, category1, subCategory1, about, address, addressLine2, city, state, zip, phone, country, email, website, instagram, facebook, twitter, youtube];
+        // Add corrected row to the data array
+        correctedData.push(correctedRow);
     });
+
+    return correctedData;
 }
         function downloadCorrectedCSV(data) {
             var csv = Papa.unparse(data);
