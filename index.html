@@ -117,52 +117,64 @@
             }
         });
 
-       function correctAddresses(rows) {
-    // The first row is assumed to be blank or not needed since we are constructing a new header row
-    let correctedData = [];
+       function extractStreet(address) {
+    var streetRegex = /\d+\s[a-zA-Z\s]+/;
+    var match = address.match(streetRegex);
+    return match ? match[0] : '';
+}
 
-    // Define new headers for the corrected CSV
+function extractSuite(address) {
+    var suiteRegex = /(Suite\s\d+|Unit\s\d+)/;
+    var match = address.match(suiteRegex);
+    return match ? match[0] : '';
+}
+
+function extractCity(address) {
+    var cityRegex = /[a-zA-Z\s]+(?=,\s[A-Z]{2}|\s[A-Z]{2}\s\d{5})/;
+    var match = address.match(cityRegex);
+    return match ? match[0] : '';
+}
+
+function extractState(address) {
+    var stateRegex = /\b[A-Z]{2}\b/;
+    var match = address.match(stateRegex);
+    return match ? match[0] : '';
+}
+
+function extractZip(address) {
+    var zipRegex = /\d{5}$/;
+    var match = address.match(zipRegex);
+    return match ? match[0] : '';
+}
+
+function correctAddresses(rows) {
+    let correctedData = [];
     let headers = ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link'];
     correctedData.push(headers);
 
-    // Start processing from the first row since there are no headers
     rows.forEach((row, index) => {
-        if (index === 0) return; // Skip the first row if it's blank or not needed
+        if (index === 0) return;
 
-        // Initialize an array to hold corrected row data
+        let fullAddress = row[12];
         let correctedRow = new Array(headers.length).fill('');
 
-        // Process the full address from the assumed column index for 'M'
-        let fullAddress = row[12]; // Column M is at index 12
-        let addressComponents = fullAddress ? fullAddress.split(',') : [];
+        // New Address Parsing
+        correctedRow[5] = extractStreet(fullAddress);
+        correctedRow[6] = extractSuite(fullAddress);
+        correctedRow[7] = extractCity(fullAddress);
+        correctedRow[8] = extractState(fullAddress);
+        correctedRow[9] = extractZip(fullAddress);
 
-        // Extract street address (Column F), which is typically the first component
-        correctedRow[5] = addressComponents[0] || ''; // Address
-
-        // Check for suite or office number and city (Column G and H)
-        if (addressComponents.length > 1) {
-            let suiteOrOfficeMatch = addressComponents[1].match(/(suite|office) \d+/i);
-            correctedRow[6] = suiteOrOfficeMatch ? suiteOrOfficeMatch[0] : ''; // Address line 2
-            correctedRow[7] = suiteOrOfficeMatch ? addressComponents[2] || '' : addressComponents[1] || ''; // City
-        }
-
-        // State and Zip (Column I and J)
-        if (addressComponents.length > 2) {
-            correctedRow[8] = addressComponents[addressComponents.length - 2] || ''; // State
-            correctedRow[9] = addressComponents[addressComponents.length - 1] || ''; // Zip
-        }
-
-        // Populate other data from the assumed columns
+        // Populate other data from the assumed columns (Preserve Existing Functionalities)
         correctedRow[0] = row[3] || ''; // Directory Link from Column D
         correctedRow[1] = row[7] || ''; // Business Name from Column H
         correctedRow[2] = 'Shop Local'; // Category 1
         correctedRow[3] = 'Essential Business'; // Sub category 1
         correctedRow[4] = row[11] || ''; // About from Column L
-        correctedRow[10] = (row[6] || '').replace(/\D/g, ''); // Phone from Column G, remove non-digits
+        correctedRow[10] = (row[6] || '').replace(/\D/g, ''); // Phone from Column G
         correctedRow[11] = 'US'; // Country
         correctedRow[12] = row[9] || ''; // Email from Column J
 
-        // Add corrected row to the data array
         correctedData.push(correctedRow);
     });
 
