@@ -2,103 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CSV Address Formatter</title>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CSV Address Formatter</title>
+    <title>Importer</title>
     <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        background: url('URL_OF_YOUR_MECHANICAL_BACKGROUND_IMAGE') no-repeat center center fixed;
-        background-size: cover;
-        color: white;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .container {
-        background: rgba(0, 0, 0, 0.75);
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        width: 40%;
-        min-width: 300px;
-    }
-    h1 {
-        text-align: center;
-        color: #fff;
-        margin-bottom: 20px;
-        font-weight: 300;
-    }
-    .styled-button {
-        display: block;
-        width: calc(100% - 20px);
-        padding: 10px;
-        margin-top: 20px;
-        background: linear-gradient(45deg, #9c27b0, #ff9800);
-        border: none;
-        border-radius: 5px;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-        outline: none;
-        text-align: center;
-    }
-    .styled-button:hover, .styled-button:focus {
-        background: linear-gradient(45deg, #ff9800, #9c27b0);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    }
-    /* Hidden input file styling */
-    .input-file-container {
-        position: relative;
-        width: calc(100% - 20px);
-    }
-    .input-file-trigger {
-        display: block;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: center;
-        background: linear-gradient(45deg, #9c27b0, #ff9800);
-        color: white;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-        width: 100%;
-    }
-    .input-file {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-    }
-    .input-file-trigger:hover, .input-file-trigger:focus {
-        background: linear-gradient(45deg, #ff9800, #9c27b0);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    }
-</style>
+       body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('https://i.imgur.com/AzPlM3K.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+        .container {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            width: 40%;
+            min-width: 300px;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        .styled-button {
+            display: block;
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #9c27b0, #ff9800);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            outline: none;
+            text-align: center;
+        }
+        .styled-button:hover, .styled-button:focus {
+            background: linear-gradient(45deg, #ff9800, #9c27b0);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        /* Hidden input file styling */
+        .input-file-container {
+            position: relative;
+            width: calc(100% - 20px);
+        }
+        .input-file-trigger {
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            background: linear-gradient(45deg, #9c27b0, #ff9800);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+        .input-file {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .input-file-trigger:hover, .input-file-trigger:focus {
+            background: linear-gradient(45deg, #ff9800, #9c27b0);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
     <div class="container">
-    <h1>CSV Address Formatter</h1>
-    <div class="input-file-container">
-        <label class="input-file-trigger" for="csvFile">Select CSV File</label>
-        <input type="file" id="csvFile" class="input-file" accept=".csv">
+        <div class="input-file-container">
+            <label class="input-file-trigger" for="csvFile">Select CSV File</label>
+            <input type="file" id="csvFile" class="input-file" accept=".csv">
+        </div>
+        <button id="processBtn" class="styled-button">Process CSV</button>
     </div>
-    <button id="processBtn" class="styled-button">Process CSV</button>
-</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         document.getElementById('processBtn').addEventListener('click', function() {
             var fileInput = document.getElementById('csvFile');
@@ -109,7 +104,7 @@
                     complete: function(results) {
                         var data = results.data;
                         var correctedData = correctAddresses(data);
-                        downloadCorrectedCSV(correctedData);
+                        downloadCorrectedXLSX(correctedData);
                     }
                 });
             } else {
@@ -117,80 +112,90 @@
             }
         });
 
-       function extractStreet(address) {
-    var streetRegex = /\d+\s[a-zA-Z\s]+/;
-    var match = address.match(streetRegex);
-    return match ? match[0] : '';
-}
+        function extractStreet(address) {
+            var streetRegex = /\d+\s[a-zA-Z\s]+/;
+            var match = address.match(streetRegex);
+            return match ? match[0] : '';
+        }
 
-function extractSuite(address) {
-    var suiteRegex = /(Suite\s\d+|Unit\s\d+)/;
-    var match = address.match(suiteRegex);
-    return match ? match[0] : '';
-}
+        function extractSuite(address) {
+            var suiteRegex = /(Suite\s\d+|Unit\s\d+)/;
+            var match = address.match(suiteRegex);
+            return match ? match[0] : '';
+        }
 
-function extractCity(address) {
-    var cityRegex = /[a-zA-Z\s]+(?=,\s[A-Z]{2}|\s[A-Z]{2}\s\d{5})/;
-    var match = address.match(cityRegex);
-    return match ? match[0] : '';
-}
+        function extractCity(address) {
+            var cityRegex = /[a-zA-Z\s]+(?=,\s[A-Z]{2}|\s[A-Z]{2}\s\d{5})/;
+            var match = address.match(cityRegex);
+            return match ? match[0] : '';
+        }
 
-function extractState(address) {
-    var stateRegex = /\b[A-Z]{2}\b/;
-    var match = address.match(stateRegex);
-    return match ? match[0] : '';
-}
+        function extractState(address) {
+            var stateRegex = /\b[A-Z]{2}\b/;
+            var match = address.match(stateRegex);
+            return match ? match[0] : '';
+        }
 
-function extractZip(address) {
-    var zipRegex = /\d{5}$/;
-    var match = address.match(zipRegex);
-    return match ? match[0] : '';
-}
+        function extractZip(address) {
+            var zipRegex = /\d{5}$/;
+            var match = address.match(zipRegex);
+            return match ? match[0] : '';
+        }
 
-function correctAddresses(rows) {
-    let correctedData = [];
-    let headers = ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link'];
-    correctedData.push(headers);
+        function correctAddresses(rows) {
+            let correctedData = [];
+            let headers = ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 
+    'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 
+    'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link',
+    'image', 'bbb accredited', 'category 2', 'sub category 2', 'category 3', 'sub category 3'];
+            correctedData.push(headers);
 
-    rows.forEach((row, index) => {
-        if (index === 0) return;
+            rows.forEach((row, index) => {
+                if (index === 0) return;
 
-        let fullAddress = row[12];
-        let correctedRow = new Array(headers.length).fill('');
+                let fullAddress = row[12];
+                let correctedRow = new Array(headers.length).fill('');
 
-        // New Address Parsing
-        correctedRow[5] = extractStreet(fullAddress);
-        correctedRow[6] = extractSuite(fullAddress);
-        correctedRow[7] = extractCity(fullAddress);
-        correctedRow[8] = extractState(fullAddress);
-        correctedRow[9] = extractZip(fullAddress);
+                correctedRow[5] = extractStreet(fullAddress);
+                correctedRow[6] = extractSuite(fullAddress);
+                correctedRow[7] = extractCity(fullAddress);
+                correctedRow[8] = extractState(fullAddress);
+                correctedRow[9] = extractZip(fullAddress);
 
-        // Populate other data from the assumed columns (Preserve Existing Functionalities)
-        correctedRow[0] = row[3] || ''; // Directory Link from Column D
-        correctedRow[1] = row[7] || ''; // Business Name from Column H
-        correctedRow[2] = 'Shop Local'; // Category 1
-        correctedRow[3] = 'Essential Business'; // Sub category 1
-        correctedRow[4] = row[11] || ''; // About from Column L
-        correctedRow[10] = (row[6] || '').replace(/\D/g, ''); // Phone from Column G
-        correctedRow[11] = 'US'; // Country
-        correctedRow[12] = row[9] || ''; // Email from Column J
+                correctedRow[0] = row[3] || ''; // Directory Link from Column D
+                correctedRow[1] = row[7] || ''; // Business Name from Column H
+                correctedRow[2] = 'Shop Local'; // Category 1
+                correctedRow[3] = 'Essential Business'; // Sub category 1
+                correctedRow[4] = row[11] || ''; // About from Column L
+                correctedRow[10] = (row[6] || '').replace(/\D/g, ''); // Phone from Column G
+                correctedRow[11] = 'US'; // Country
+                correctedRow[12] = row[9] || ''; // Email from Column J
 
-        correctedData.push(correctedRow);
-    });
+                correctedData.push(correctedRow);
+            });
 
-    return correctedData;
-}
-        function downloadCorrectedCSV(data) {
-            var csv = Papa.unparse(data);
-            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            var link = document.createElement('a');
-            var url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'corrected_addresses.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            return correctedData;
+        }
+
+        function downloadCorrectedXLSX(data) {
+            var workbook = XLSX.utils.book_new();
+            var worksheet = XLSX.utils.aoa_to_sheet(data);
+
+            // Apply formatting
+            worksheet['!cols'] = [{ wpx: 150 }]; // Set column width
+            worksheet['!rows'] = data.map((_, index) => ({ hpx: index === 0 ? 21 : 20 })); // Set row heights
+
+            // Freeze and bold the first row
+            worksheet['!freeze'] = { xSplit: "1", ySplit: "1" };
+            var range = XLSX.utils.decode_range(worksheet['!ref']);
+            for(var C = range.s.c; C <= range.e.c; ++C) {
+                var address = XLSX.utils.encode_col(C) + "1"; // Get cell address
+                if(!worksheet[address]) continue;
+                worksheet[address].s = { font: { bold: true } };
+            }
+
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, 'corrected_addresses.xlsx');
         }
     </script>
 </body>
