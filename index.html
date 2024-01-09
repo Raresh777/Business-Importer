@@ -4,94 +4,60 @@
     <meta charset="UTF-8">
     <title>Importer</title>
     <style>
-       body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: url('https://i.imgur.com/AzPlM3K.png') no-repeat center center fixed;
-    background-size: cover;
-    color: white;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-        .container {
-            background: rgba(0, 0, 0, 0.75);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            width: 40%;
-            min-width: 300px;
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
-        .styled-button {
-            display: block;
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-top: 20px;
-            background: linear-gradient(45deg, #9c27b0, #ff9800);
-            border: none;
-            border-radius: 5px;
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://i.imgur.com/AzPlM3K.png') no-repeat center center fixed;
+            background-size: cover;
             color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            outline: none;
-            text-align: center;
-        }
-        .styled-button:hover, .styled-button:focus {
-            background: linear-gradient(45deg, #ff9800, #9c27b0);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-        }
-        /* Hidden input file styling */
-        .input-file-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            width: calc(100% - 20px);
         }
-        .input-file-trigger {
+
+        .button-group {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .styled-button, .input-file-trigger {
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid white;
+            color: #4d4d4d;
             display: block;
             padding: 10px;
             border-radius: 5px;
-            text-align: center;
-            background: linear-gradient(45deg, #9c27b0, #ff9800);
-            color: white;
             font-size: 16px;
+            cursor: pointer;
             transition: all 0.3s ease;
-            cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            width: 100%;
+            text-align: center;
         }
-        .input-file {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .input-file-trigger:hover, .input-file-trigger:focus {
-            background: linear-gradient(45deg, #ff9800, #9c27b0);
+
+        .styled-button:hover, .input-file-trigger:hover {
+            background: rgba(255, 255, 255, 0.7);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .input-file {
+            display: none;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="input-file-container">
-            <label class="input-file-trigger" for="csvFile">Select CSV File</label>
-            <input type="file" id="csvFile" class="input-file" accept=".csv">
-        </div>
-        <button id="processBtn" class="styled-button">Process CSV</button>
+    <div class="button-group">
+        <input type="file" id="csvFile" class="input-file" accept=".csv">
+        <label class="styled-button" for="csvFile">Upload</label>
+        <button id="processBtn" class="styled-button">Process</button>
     </div>
 
     <script>
@@ -196,26 +162,26 @@ function formatUSPhone(phone) {
         return phone;
     }
 }
-    function downloadCorrectedXLSX(data) {
-            var workbook = XLSX.utils.book_new();
-            var worksheet = XLSX.utils.aoa_to_sheet(data);
+   function downloadCorrectedXLSX(data) {
+    var workbook = XLSX.utils.book_new();
+    var worksheet = XLSX.utils.aoa_to_sheet(data);
 
-            // Apply formatting
-            worksheet['!cols'] = [{ wpx: 150 }]; // Set column width
-            worksheet['!rows'] = data.map((_, index) => ({ hpx: index === 0 ? 21 : 20 })); // Set row heights
+    // Apply formatting
+    worksheet['!cols'] = [{ wpx: 150 }]; // Set column width
+    worksheet['!rows'] = data.map((_, index) => ({ hpx: index === 0 ? 21 : 20 })); // Set row heights
 
-            // Freeze and bold the first row
-            worksheet['!freeze'] = { xSplit: "1", ySplit: "1" };
-            var range = XLSX.utils.decode_range(worksheet['!ref']);
-            for(var C = range.s.c; C <= range.e.c; ++C) {
-                var address = XLSX.utils.encode_col(C) + "1"; // Get cell address
-                if(!worksheet[address]) continue;
-                worksheet[address].s = { font: { bold: true } };
-            }
+    // Freeze and bold the first row
+    worksheet['!freeze'] = { xSplit: "1", ySplit: "1" };
+    var range = XLSX.utils.decode_range(worksheet['!ref']);
+    for(var C = range.s.c; C <= range.e.c; ++C) {
+        var address = XLSX.utils.encode_col(C) + "1"; // Get cell address
+        if(!worksheet[address]) continue;
+        worksheet[address].s = { font: { bold: true } };
+    }
 
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-            XLSX.writeFile(workbook, 'corrected_addresses.xlsx');
-        }
+    XLSX.utils.book_append_sheet(workbook, worksheet, "BizImport"); // Changed sheet name here
+    XLSX.writeFile(workbook, 'BizImport.xlsx');
+}
     </script>
 </body>
 </html>
