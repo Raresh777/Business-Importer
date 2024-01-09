@@ -142,7 +142,7 @@
             return match ? match[0] : '';
         }
 
-        function correctAddresses(rows) {
+  function correctAddresses(rows) {
     let correctedData = [];
     let headers = ['Directory Link', 'Business Name', 'Category 1', 'Sub category 1', 'About', 'Address', 'Address line 2', 'City', 'State', 'Zip', 'Phone', 'Country', 'Email', 'Website', 'Instagram username', 'Facebook username', 'Twitter username', 'YouTube video link', 'image', 'bbb accredited', 'category 2', 'sub category 2', 'category 3', 'sub category 3'];
     correctedData.push(headers);
@@ -163,7 +163,14 @@
         correctedRow[7] = extractCity(fullAddress);
         correctedRow[8] = extractState(fullAddress);
         correctedRow[9] = extractZip(fullAddress);
-        correctedRow[10] = (row[6] || '').replace(/\D/g, ''); // Phone from Column G
+
+        // Validate phone number
+        let phone = row[6];
+        if (!isValidUSPhone(phone)) {
+            return; // Skip the entire row if the phone number is invalid
+        }
+        correctedRow[10] = formatUSPhone(phone); // Format valid phone number
+
         correctedRow[11] = 'US'; // Country
         correctedRow[12] = row[9]; // Email from Column J
         // ... other data assignments ...
@@ -174,7 +181,22 @@
     return correctedData;
 }
 
-        function downloadCorrectedXLSX(data) {
+// Validate US phone number
+function isValidUSPhone(phone) {
+    var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    return phoneRegex.test(phone);
+}
+
+// Format US phone number
+function formatUSPhone(phone) {
+    var formatted = phone.replace(/\D/g, '');
+    if (formatted.length === 10) {
+        return formatted.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+    } else {
+        return phone;
+    }
+}
+    function downloadCorrectedXLSX(data) {
             var workbook = XLSX.utils.book_new();
             var worksheet = XLSX.utils.aoa_to_sheet(data);
 
